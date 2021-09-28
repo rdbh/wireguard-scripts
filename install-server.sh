@@ -1,4 +1,12 @@
+#!/bin/bash
 # Install wireguard on Ubuntu Server
+
+# Default variables
+# Change these if you need to
+INSTALL_DIRECTORY=/etc/wireguard
+SERVER_PRIVATE=server_private_key
+SERVER_PUBLIC=server_public_key
+OVERWRITE=0
 
 # Set IP range (experimental)
 if [ $# -eq 0 ]
@@ -21,16 +29,32 @@ sudo apt-get -y install zip
 sudo apt-get install -y qrencode
 
 # Create Server Keys
-cd /etc/wireguard
-sudo wg genkey | tee server_private_key | wg pubkey > server_public_key
+sudo -i
+if [[ -d "$INSTALL_DIRECTORY" ]]
+then
+	echo "$INSTALL_DIRECTORY exists"
+	echo "This process could over-write existing keys!"
+else
+	echo "Creating $INSTALL_DIRECTORY"
+	mkdir -m 0700 $INSTALL_DIRECTORY
+fi
+
+cd $INSTALL_DIRECTORY
+umask 077; wg genkey | tee $SERVER_PRIVATE | wg pubkey > $SERVER_PUBLIC
 
 # Get config
 sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-server.example.conf 
 sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-client.example.conf
 
-# Add server key to config
-SERVER_PUB_KEY=$(cat /etc/wireguard/server_public_key)
-cat /etc/wireguard/wg0-server.example.conf | sed -e 's|:SERVER_KEY:|'"${SERVER_PUB_KEY}"'|' > /etc/wireguard/wg0.conf
+# Check if wg0.conf already exists
+if [[ -f $INSTALL_DIRECTORY/wg0.conf ]]
+then
+	echo "$INSTALL_DIRECTORY/wg0.conf exists"
+else
+	# Add server key to config
+	SERVER_PUB_KEY=$(cat $INSTALL_DIRECTORY/$SERVER_PUBLIC)
+	cat $INSTALL_DIRECTORY/wg0-server.example.conf | sed -e 's|:SERVER_KEY:|'"${SERVER_PUB_KEY}"'|' > $INSTALL_DIRECTORY/wg0.conf
+fi
 
 # Add server IP to last-ip.txt file
 echo ${server_ip} > last-ip.txt
@@ -50,5 +74,10 @@ sudo wg-quick up wg0
 sudo sysctl -p
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
+# Open firewall ports
+sudo ufw allow 41194/udp
+
 # Use this to forward traffic from the server
 #sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+
+

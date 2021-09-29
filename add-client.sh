@@ -15,7 +15,8 @@ else
 	#command line ip address or generated
 	if [ $2 -eq 0 ]
 	then
-		ip="10.100.200."$(expr $(cat last-ip.txt | tr "." " " | awk '{print $4}') + 1)
+		reldir=`dirname $0`
+		ip="10.100.200."$(expr $(cat ${reldir}/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
 	else
 		ip=$2
 	fi

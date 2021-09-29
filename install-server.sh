@@ -79,7 +79,8 @@ fi
 
 # Add server IP to last-ip.txt file
 add_line=${server_ip} + ":server"
-echo ${server_ip} > last_ip.txt
+reldir=`dirname $0`
+echo ${server_ip} > ${reldir}/last-ip.txt
 
 # Get run scripts/master/wg0-server
 cd ~
@@ -90,11 +91,8 @@ chmod +x install-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-peer.sh
 chmod +x remove-peer.sh
 
-# Start up server
-sudo wg-quick up wg0
-
-sudo sysctl -p
-echo 1 > /proc/sys/net/ipv4/ip_forward
+#sudo sysctl -p
+#echo 1 > /proc/sys/net/ipv4/ip_forward
 
 # Open firewall ports
 sudo ufw allow 51820/udp

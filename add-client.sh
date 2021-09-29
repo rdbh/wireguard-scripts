@@ -45,7 +45,8 @@ else
 	printf $peer >> /etc/wireguard/wg0.conf
 	sudo systemctl restart wg-quick@wg0.service
 	
-	echo ${ip} > /etc/wireguard/last-ip.txt
+	reldir=`dirname $0`
+	echo ${ip} > ${reldir}/last-ip.txt
 	cp install-client.sh clients/$1/install-client.sh
 	zip -r clients/$1.zip clients/$1
 	tar czvf clients/$1.tar.gz clients/$1

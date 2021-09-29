@@ -93,7 +93,7 @@ sudo sysctl -p
 echo 1 > /proc/sys/net/ipv4/ip_forward
 
 # Open firewall ports
-sudo ufw allow 41194/udp
+sudo ufw allow 51820/udp
 
 # Use this to forward traffic from the server
 #sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf

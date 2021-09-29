@@ -9,7 +9,8 @@ else
 	echo "Creating client config for: $1"
 	mkdir -p clients/$1
 	wg genkey | tee clients/$1/$1.priv | wg pubkey > clients/$1/$1.pub
-	key=$(cat clients/$1/$1.priv) 
+	priv_key=$(cat clients/$1/$1.priv)
+	pub_key=$(cat clients/$1/$1.pub)
 	
 	#command line ip address or generated
 	if [ $2 -eq 0 ]
@@ -20,19 +21,27 @@ else
 	fi
 	
 	FQDN=$(hostname -f)
+	# Note: This is configured for Vultr instance. Adapter names may vary
 	HOSTIP=$(ip -4 addr show enp1s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 	
 	#Try to get server IP address
 	if [[ ${HOSTIP} == "" ]]
 	then
-	    echo "Server IP not found automatically. Update wg0.conf before adding clients"
+	    echo "Server IP not found automatically. Update wg0.conf before sending to clients"
 		HOSTIP="<Insert IP HERE>"
 	fi
 	
     server_pub_key=$(cat /etc/wireguard/server_public_key)
 	ip3=`echo $ip | cut -d"." -f1-3`.0
 	
-    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
+	# Create the client config
+    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
+	
+	# Add client (peer) to server config
+	peer="\n[Peer]\n" + "PublicKey = " + ${pub_key} + "\nAllowedIPs = " + ${ip}
+	printf $peer >> /etc/wireguard/wg0.conf
+	sudo systemctl restart wg-quick@wg0.service
+	
 	echo ${ip} > /etc/wireguard/last-ip.txt
 	cp install-client.sh clients/$1/install-client.sh
 	zip -r clients/$1.zip clients/$1

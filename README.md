@@ -17,6 +17,8 @@ https://www.wireguard.com/install/
 
 https://www.wireguard.com/quickstart/
 
+https://github.com/davidgross/wireguard-scripts
+
 ## Simple installation
 1. run the following commands from the command line:
   

@@ -63,6 +63,10 @@ fi
 sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-server.example.conf 
 sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-client.example.conf
 
+# Get postup and posrdown (experimental)
+wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/postdown.sh
+wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/postup.sh
+
 # Check if wg0.conf already exists
 if [ -f $INSTALL_DIRECTORY/wg0.conf ] && [ $OVERWRITE == 0 ] 
 then

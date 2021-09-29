@@ -39,6 +39,8 @@ else
     cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
 	
 	# Add client (peer) to server config
+	echo "Adding peer"
+	sudo wg set wg0 peer $(cat clients/$1/$1.pub) allowed-ips $ip/32
 	peer="\n[Peer]\n" + "PublicKey = " + ${pub_key} + "\nAllowedIPs = " + ${ip}
 	printf $peer >> /etc/wireguard/wg0.conf
 	sudo systemctl restart wg-quick@wg0.service
@@ -48,8 +50,7 @@ else
 	zip -r clients/$1.zip clients/$1
 	tar czvf clients/$1.tar.gz clients/$1
 	echo "Created config!"
-	echo "Adding peer"
-	sudo wg set wg0 peer $(cat clients/$1/$1.pub) allowed-ips $ip/32
+
 	echo "Adding peer to hosts file"
 	echo $ip" "$1 | sudo tee -a /etc/hosts
 	sudo wg show

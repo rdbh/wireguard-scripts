@@ -27,8 +27,8 @@ sudo apt-get -y install zip
 sudo apt-get install -y qrencode
 
 # Create Server Keys
-sudo -i
-if [ -d "$INSTALL_DIRECTORY" ]
+
+if [ -d $INSTALL_DIRECTORY ]
 then
 	echo "$INSTALL_DIRECTORY exists"
 	echo "This process could over-write existing keys!"
@@ -36,8 +36,8 @@ then
 	while true; do
 		read -p "Do you wish to overwrite existing keys?" yn
 		case $yn in
-			[Yy]* ) OVERWRITE=1;;
-			[Nn]* ) OVERWRITE=0;;
+			[Yy]* ) OVERWRITE=1; break;;
+			[Nn]* ) OVERWRITE=0; break;;
 			* ) echo "Please answer yes or no.";;
 		esac
 	done
@@ -66,11 +66,12 @@ then
 else
 	# Add server key to config
 	SERVER_PUB_KEY=$(cat $INSTALL_DIRECTORY/$SERVER_PUBLIC)
-	cat $INSTALL_DIRECTORY/wg0-server.example.conf | sed -e 's|:SERVER_KEY:|'"${SERVER_PUB_KEY}"'|' > $INSTALL_DIRECTORY/wg0.conf
+	cat $INSTALL_DIRECTORY/wg0-server.example.conf | sed -e 's/:SERVER_IP:/'"$server_ip"'/' | sed -e 's|:SERVER_KEY:|'"${SERVER_PUB_KEY}"'|' > $INSTALL_DIRECTORY/wg0.conf
 fi
 
 # Add server IP to last-ip.txt file
-echo ${server_ip} > last-ip.txt
+add_line=${server_ip} + ":server"
+echo ${server_ip} > last_ip.txt
 
 # Get run scripts/master/wg0-server
 cd ~

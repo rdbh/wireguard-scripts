@@ -1,5 +1,9 @@
 #!/bin/bash
 # Install wireguard on Ubuntu Server
+# (C) 2021 Richard Dawson 
+
+# Ubuntu 18.04
+#sudo add-apt-repository ppa:wireguard/wireguard
 
 # Default variables
 # Change these if you need to
@@ -94,4 +98,8 @@ sudo ufw allow 41194/udp
 # Use this to forward traffic from the server
 #sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 #sudo sysctl -p /etc/sysctl.conf
+#ufw route allow in on wg0 out on enp5s0
 
+# Set up wireguard to run on boot
+sudo systemctl enable wg-quick@wg0
+sudo systemctl start wg-quick@wg0

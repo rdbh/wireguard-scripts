@@ -15,9 +15,13 @@ sudo apt-get -y install wireguard
 # put wg0.conf in `/etc/wireguard/`
 cat wg0.conf | sudo tee /etc/wireguard/wg0.conf
 
+# DNS Resolver commands (may be rquired)
+#sudo ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
+#sudo systemctl enable systemd-resolved.service
+
 # start wireguard wg0
 sudo wg-quick up wg0
 
 # set wireguard wg0 to start on boot
-sudo systemctl enable wg-quick@wg0.service
+sudo systemctl enable wg-quick@wg0.service --now
 

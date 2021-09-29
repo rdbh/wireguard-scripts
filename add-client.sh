@@ -1,4 +1,6 @@
 #!/bin/bash
+# Add Wireguard Client to Ubuntu Server
+# (C) 2021 Richard Dawson 
 
 if [ $# -eq 0 ]
 then
@@ -27,8 +29,10 @@ else
 		HOSTIP="<Insert IP HERE>"
 	fi
 	
-    SERVER_PUB_KEY=$(cat /etc/wireguard/server_public_key)
-    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$key"'|' | sed -e 's|:SERVER_PUB_KEY:|'"$SERVER_PUB_KEY"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
+    server_pub_key=$(cat /etc/wireguard/server_public_key)
+	ip3=`echo $ip | cut -d"." -f1-3`.0
+	
+    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
 	echo ${ip} > /etc/wireguard/last-ip.txt
 	cp install-client.sh clients/$1/install-client.sh
 	zip -r clients/$1.zip clients/$1

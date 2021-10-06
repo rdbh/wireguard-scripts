@@ -8,7 +8,7 @@ then
 else
 	echo "Creating client config for: $1"
 	mkdir -p clients/$1
-	wg genkey | tee clients/$1/$1.priv | wg pubkey > clients/$1/$1.pub
+	wg genkey | (umask 0077 && tee clients/$1/$1.priv) | wg pubkey > clients/$1/$1.pub
 	priv_key=$(cat clients/$1/$1.priv)
 	pub_key=$(cat clients/$1/$1.pub)
 	

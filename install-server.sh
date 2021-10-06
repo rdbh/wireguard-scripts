@@ -8,8 +8,8 @@
 # Default variables
 # Change these if you need to
 INSTALL_DIRECTORY=/etc/wireguard
-SERVER_PRIVATE=server_private_key
-SERVER_PUBLIC=server_public_key
+SERVER_PRIVATE_FILE=server_private_key
+SERVER_PUBLIC_FILE=server_public_key
 
 # Set IP range if none specified (experimental)
 if [ $# -eq 0 ]
@@ -52,11 +52,11 @@ fi
 
 cd $INSTALL_DIRECTORY
 
-if [ -f $SERVER_PRIVATE ] && [ $OVERWRITE == 0 ]
+if [ -f $SERVER_PRIVATE_FILE ] && [ $OVERWRITE == 0 ]
 then
-	echo "$SERVER_PRIVATE exists, skipping."
+	echo "$SERVER_PRIVATE_FILE exists, skipping."
 else
-	umask 077; wg genkey | tee $SERVER_PRIVATE | wg pubkey > $SERVER_PUBLIC
+	umask 077; wg genkey | tee $SERVER_PRIVATE_FILE | wg pubkey > $SERVER_PUBLIC_FILE
 fi
 
 # Get config
@@ -69,8 +69,8 @@ then
 	echo "$INSTALL_DIRECTORY/wg0.conf exists, skipping."
 else
 	# Add server key to config
-	SERVER_PUB_KEY=$(cat $INSTALL_DIRECTORY/$SERVER_PUBLIC)
-	cat $INSTALL_DIRECTORY/wg0-server.example.conf | sed -e 's/:SERVER_IP:/'"$server_ip"'/' | sed -e 's|:SERVER_KEY:|'"${SERVER_PUB_KEY}"'|' > $INSTALL_DIRECTORY/wg0.conf
+	SERVER_PRI_KEY=$(cat $INSTALL_DIRECTORY/$SERVER_PRIVATE_FILE)
+	cat $INSTALL_DIRECTORY/wg0-server.example.conf | sed -e 's/:SERVER_IP:/'"$server_ip"'/' | sed -e 's|:SERVER_KEY:|'"${SERVER_PRI_KEY}"'|' > $INSTALL_DIRECTORY/wg0.conf
 fi
 
 # Add server IP to last-ip.txt file
@@ -87,10 +87,10 @@ wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-peer
 chmod +x remove-peer.sh
 
 # Start up server
-sudo wg-quick up wg0
-
 sudo sysctl -p
 echo 1 > /proc/sys/net/ipv4/ip_forward
+
+sudo wg-quick up wg0
 
 # Open firewall ports
 sudo ufw allow 51820/udp
@@ -101,4 +101,4 @@ sudo sysctl -p /etc/sysctl.conf
 #ufw route allow in on wg0 out on enp5s0
 
 # Set up wireguard to run on boot
-sudo systemctl enable wg-quick@wg0
+sudo systemctl enable wg-quick@wg0.service

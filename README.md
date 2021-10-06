@@ -22,7 +22,7 @@ https://www.wireguard.com/quickstart/
   
 	`wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-server.sh`
 	
-	`bash install-server.sh`
+	`bash install-server.sh [ip address]`
 
 
 ## Installation

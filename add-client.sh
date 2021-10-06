@@ -16,14 +16,14 @@ else
 	if [ $2 -eq 0 ]
 	then
 		reldir=`dirname $0`
-		ip="10.100.200."$(expr $(cat ${reldir}/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
+		ip="10.100.200."$(expr $(cat /etc/wireguard/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
+		echo $ip > /etc/wireguard/last-ip.txt
 	else
 		ip=$2
 	fi
 	
 	FQDN=$(hostname -f)
-	# Note: This is configured for Vultr instance. Adapter names may vary
-	HOSTIP=$(ip -4 addr show enp1s0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+	HOSTIP=$(ip -o route get to 1 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 	
 	#Try to get server IP address
 	if [[ ${HOSTIP} == "" ]]

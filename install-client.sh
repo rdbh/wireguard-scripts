@@ -11,6 +11,7 @@
 #Both
 sudo apt-get update
 sudo apt-get -y install wireguard
+sudo apt-get -y install wireguard-tools
 
 # put wg0.conf in `/etc/wireguard/`
 cat wg0.conf | sudo tee /etc/wireguard/wg0.conf

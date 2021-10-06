@@ -102,4 +102,3 @@ sudo ufw allow 51820/udp
 
 # Set up wireguard to run on boot
 sudo systemctl enable wg-quick@wg0
-sudo systemctl start wg-quick@wg0

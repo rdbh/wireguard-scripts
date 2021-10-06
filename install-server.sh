@@ -96,8 +96,8 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 sudo ufw allow 51820/udp
 
 # Use this to forward traffic from the server
-#sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
-#sudo sysctl -p /etc/sysctl.conf
+sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sudo sysctl -p /etc/sysctl.conf
 #ufw route allow in on wg0 out on enp5s0
 
 # Set up wireguard to run on boot

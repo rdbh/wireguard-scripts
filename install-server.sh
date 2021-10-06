@@ -32,9 +32,9 @@ sudo apt-get install -y qrencode
 
 # Create Server Keys
 
-if [ -d $INSTALL_DIRECTORY ]
+if [ -f $INSTALL_DIRECTORY/wg0.conf ]
 then
-	echo "$INSTALL_DIRECTORY exists"
+	echo "$INSTALL_DIRECTORY/wg0.conf exists"
 	echo "This process could over-write existing keys!"
 	echo
 	while true; do

@@ -18,11 +18,11 @@ then
 else
 	echo "Removing" $1
 	# Check to see if client exists
-	if [ -f /clients/$1/$1.pub ]
+	if [ -f clients/$1/wg0.conf ]
 	then
-		peer_pub_key=$(cat /clients/$1/$1.pub)
+		peer_pub_key=$(cat clients/$1/$1.pub)
 	else
-		echo "Can't find config for client " $1
+		echo "Can't find config for client" $1
 		exit 1
 	fi
 fi

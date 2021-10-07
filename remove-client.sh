@@ -5,10 +5,10 @@ then
 	echo "You must specify a valid client name or public key"
 	sudo wg show
 	exit 1
-elif [ $(echo "${$1: -1}") == "=" ] 
+elif [ $(echo "${1: -1}") == "=" ] 
 then
 	wg_server=$(sudo wg show)
-	if [[ "$wg_server" == *"$1"* ]]
+	if [[ "${wg_server}" == *"$1"* ]]
 	then
 		peer_pub_key=$1
 	else

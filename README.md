@@ -9,7 +9,7 @@ add and remove clients from a wireguard server.
 Download the generated `<client_name>.tar.gz` file and extract it. Follow the instructions in `SETUP.txt` in the resulting folder.
 
 
-### This set of scripts was heavily influcenced by:
+### This set of scripts was heavily influenced by:
 
 https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/
 
@@ -17,15 +17,19 @@ https://www.wireguard.com/install/
 
 https://www.wireguard.com/quickstart/
 
-## Simple installation
+## Simple Installation
+NOTE: The IP addresses are optional. If none are specified, the script defaults to 10.100.200.0/24.
 1. run the following commands from the command line:
   
 	`wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-server.sh`
 	
-	`bash install-server.sh [ip address]`
+	`bash install-server.sh [IP address]`
+	
+	`./add-client.sh -c <name> [IP address]`
+	
 
 
-## Installation
+## Manual Installation
 NOTE: this assumes some decent commandline knowlege.
 
 1. Clone/fork(if you want to save your own configs) the Repo
@@ -44,7 +48,7 @@ NOTE: this assumes some decent commandline knowlege.
 
 1. start wireguard: `sudo wg-quick up wg0` 
 
-1. add a client `bash add-client.sh <new-client>`
+1. add a client `bash add-client.sh -c <new-client> [IP address]`
 
 1. setup iptables rules, see: https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/ step 6 for more details.
 

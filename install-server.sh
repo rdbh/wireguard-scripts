@@ -84,7 +84,7 @@ chmod +x add-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-client.sh
 chmod +x install-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-client.sh
-chmod +x remove-peer.sh
+chmod +x remove-client.sh
 
 # Start up server
 sudo sysctl -p

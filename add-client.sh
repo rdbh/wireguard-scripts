@@ -24,7 +24,6 @@ then
 		reldir=`dirname $0`
 		ip="10.100.200."$(expr $(cat /etc/wireguard/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
 		sudo echo $ip > /etc/wireguard/last-ip.txt
-		sudo echo ${ip} > /etc/wireguard/last-ip.txt
 	else
 		ip=$3
 	fi
@@ -68,7 +67,7 @@ peer_config="\n[Peer]\n" + "PublicKey = " + ${pub_key} + "\nAllowedIPs = " + ${i
 sudo printf $peer_config >> /etc/wireguard/wg0.conf
 sudo systemctl restart wg-quick@wg0.service
 	
-sudo wg set wg0 peer $(cat clients/$1/$1.pub) allowed-ips $ip/32
+sudo wg set wg0 peer $(cat clients/$peer_name/$peer_name.pub) allowed-ips $ip/32
 echo "Adding peer to hosts file"
 echo $ip" "$peer_name | sudo tee -a /etc/hosts
 # Show new server config

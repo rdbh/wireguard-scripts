@@ -15,7 +15,7 @@ elif [ $1 == "-c" ]
 then
 	peer_name=$2
 	echo "Creating client config for: ${peer_name}"
-	mkdir -p clients/$2
+	mkdir -p clients/$peer_name
 	wg genkey | (umask 0077 && tee clients/$peer_name/$peer_name.priv) | wg pubkey > clients/$peer_name/$peer_name.pub
 	
 	# get command line ip address or generated from last-ip.txt
@@ -37,6 +37,7 @@ then
 	ip3=`echo $ip | cut -d"." -f1-3`.0
 	
 	# Create the client config
+	priv_key=$(cat clients/$peer_name/$peer_name.priv)
     cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
 	cp install-client.sh clients/$peer_name/install-client.sh
 	# Create QR Code for export

@@ -83,7 +83,7 @@ wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/add-client.
 chmod +x add-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-client.sh
 chmod +x install-client.sh
-wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-peer.sh
+wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-client.sh
 chmod +x remove-peer.sh
 
 # Start up server

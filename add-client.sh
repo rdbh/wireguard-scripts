@@ -64,8 +64,7 @@ pub_key=$(cat clients/$peer_name/$peer_name.pub)
 # Add client (peer) to server config
 peer_config="\n[Peer]\nPublicKey = ${pub_key} \nAllowedIPs = ${ip}"
 sudo printf "$peer_config" >> /etc/wireguard/wg0.conf
-sudo printf "$peer_config"
-#sudo systemctl restart wg-quick@wg0.service
+sudo systemctl restart wg-quick@wg0.service
 	
 sudo wg set wg0 peer $(cat clients/$peer_name/$peer_name.pub) allowed-ips $ip/32
 echo "Adding peer to hosts file"

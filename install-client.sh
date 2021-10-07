@@ -1,3 +1,4 @@
+#!/bin/bash
 # Install instructions for clients created by add-client.sh
 # (C) 2021 Richard Dawson 
 
@@ -14,7 +15,7 @@ sudo apt-get -y install wireguard
 sudo apt-get -y install wireguard-tools
 
 # put wg0.conf in `/etc/wireguard/`
-cat wg0.conf | sudo tee /etc/wireguard/wg0.conf
+sudo cp wg0.conf /etc/wireguard/wg0.conf
 
 # DNS Resolver commands (may be rquired)
 #sudo ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
@@ -24,5 +25,5 @@ cat wg0.conf | sudo tee /etc/wireguard/wg0.conf
 sudo wg-quick up wg0
 
 # set wireguard wg0 to start on boot
-sudo systemctl enable wg-quick@wg0.service --now
+sudo systemctl enable wg-quick@wg0.service 
 

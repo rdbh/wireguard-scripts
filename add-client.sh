@@ -9,12 +9,12 @@ peer_name=""
 
 if [ $# -eq 0 ]
 then
-	echo "must pass a client name as an arg: add-client.sh <new-client>"
+	echo "You must pass a client name as an arg: add-client.sh <new-client>"
 	exit 1
 elif [ $1 == "-c" ]
 then
 	peer_name=$2
-	echo "Creating client config for: $peer_name"
+	echo "Creating client config for: ${peer_name}"
 	mkdir -p clients/$2
 	wg genkey | (umask 0077 && tee clients/$peer_name/$peer_name.priv) | wg pubkey > clients/$peer_name/$peer_name.pub
 	
@@ -60,10 +60,9 @@ echo ""
 echo "Adding peer" $peer_name "to peer list from /clients"
 priv_key=$(cat clients/$peer_name/$peer_name.priv)
 pub_key=$(cat clients/$peer_name/$peer_name.pub)
-	
     
 # Add client (peer) to server config
-peer_config="\n[Peer]\nPublicKey = " + ${pub_key} + "\nAllowedIPs = " + ${ip}
+peer_config="\n[Peer]\nPublicKey = ${pub_key} \nAllowedIPs = ${ip}"
 sudo printf "$peer_config" >> /etc/wireguard/wg0.conf
 sudo printf "$peer_config"
 #sudo systemctl restart wg-quick@wg0.service

@@ -19,7 +19,7 @@ then
 	wg genkey | (umask 0077 && tee clients/$peer_name/$peer_name.priv) | wg pubkey > clients/$peer_name/$peer_name.pub
 	
 	# get command line ip address or generated from last-ip.txt
-	if [ $3 -eq 0 ]
+	if [ -z "$3" ]
 	then
 		reldir=`dirname $0`
 		ip="10.100.200."$(expr $(cat /etc/wireguard/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
@@ -37,7 +37,7 @@ then
 	ip3=`echo $ip | cut -d"." -f1-3`.0
 	
 	# Create the client config
-    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
+    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
 	cp install-client.sh clients/$peer_name/install-client.sh
 	# Create QR Code for export
 	qrencode -o clients/$peer_name/$peer_name.png < clients/$peer_name/wg0.conf

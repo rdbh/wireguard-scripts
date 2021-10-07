@@ -11,7 +11,7 @@ if [ $# -eq 0 ]
 then
 	echo "must pass a client name as an arg: add-client.sh <new-client>"
 	exit 1
-else if [ $1 == "-c" ]
+elif [ $1 == "-c" ]
 then
 	peer_name=$2
 	echo "Creating client config for: $peer_name"
@@ -27,7 +27,7 @@ then
 		sudo echo ${ip} > /etc/wireguard/last-ip.txt
 	else
 		ip=$3
-	
+	fi
 	#Try to get server IP address
 	if [[ ${HOSTIP} == "" ]]
 	then
@@ -40,10 +40,12 @@ then
 	# Create the client config
     cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$1/wg0.conf
 	cp install-client.sh clients/$peer_name/install-client.sh
+	# Create QR Code for export
+	qrencode -o clients/$peer_name/$peer_name.png < clients/$peer_name/wg0.conf
+	# Compress file contents into packages
 	zip -r clients/$peer_name.zip clients/$peer_name
 	tar czvf clients/$peer_name.tar.gz clients/$peer_name
 	echo "Created config files"
-
 else
 	peer_name=$1
 	# get command line ip address or generated from last-ip.txt
@@ -53,6 +55,7 @@ else
 		ip=$(sed -n -e '/Address=/ s/.*\= *//p' /clients/$1/wg0.conf)
 	else
 		ip=$2
+	fi
 fi
 echo ""
 echo "Adding peer" $peer_name "to peer list from /clients"
@@ -65,10 +68,12 @@ peer_config="\n[Peer]\n" + "PublicKey = " + ${pub_key} + "\nAllowedIPs = " + ${i
 sudo printf $peer_config >> /etc/wireguard/wg0.conf
 sudo systemctl restart wg-quick@wg0.service
 	
-	sudo wg set wg0 peer $(cat clients/$1/$1.pub) allowed-ips $ip/32
-	echo "Adding peer to hosts file"
-	echo $ip" "$peer_name | sudo tee -a /etc/hosts
-	sudo wg show
-	qrencode -t ansiutf8 < clients/$peer_name/wg0.conf
-	qrencode -o clients/$peer_name/$peer_name.png < clients/$peer_name/wg0.conf
+sudo wg set wg0 peer $(cat clients/$1/$1.pub) allowed-ips $ip/32
+echo "Adding peer to hosts file"
+echo $ip" "$peer_name | sudo tee -a /etc/hosts
+# Show new server config
+sudo wg show
+# Show QR code in bash
+qrencode -t ansiutf8 < clients/$peer_name/wg0.conf
+
 

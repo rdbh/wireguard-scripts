@@ -49,7 +49,7 @@ then
 else
 	peer_name=$1
 	# get command line ip address or generated from last-ip.txt
-	if [ $2 -eq 0 ]
+	if [ -z "$2" ]
 	then
 		# get ip address from wg0.conf
 		ip=$(sed -n -e '/Address=/ s/.*\= *//p' /clients/$1/wg0.conf)

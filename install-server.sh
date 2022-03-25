@@ -80,7 +80,7 @@ else
 fi
 
 # Add server IP to last-ip.txt file
-add_line=${server_ip} + ":server"
+#add_line=${server_ip} + ":server"
 echo ${server_ip} > last_ip.txt
 
 # Get run scripts/master/wg0-server
@@ -94,7 +94,6 @@ sudo chmod +x remove-client.sh
 
 # Start up server
 sudo cp $INSTALL_DIRECTORY/wg0.conf /etc/wireguard
-sudo su
 sudo sysctl -p
 sudo echo 1 > /proc/sys/net/ipv4/ip_forward
 

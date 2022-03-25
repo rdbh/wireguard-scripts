@@ -38,7 +38,7 @@ then
 	
 	# Create the client config
 	priv_key=$(cat clients/$peer_name/$peer_name.priv)
-    cat /etc/wireguard/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
+    cat $HOME/wg-install/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
 	cp install-client.sh clients/$peer_name/install-client.sh
 	# Create QR Code for export
 	qrencode -o clients/$peer_name/$peer_name.png < clients/$peer_name/wg0.conf

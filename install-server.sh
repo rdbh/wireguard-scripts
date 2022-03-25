@@ -1,6 +1,7 @@
 #!/bin/bash
 # Install wireguard on Ubuntu Server
 # (C) 2021 Richard Dawson 
+# v1.0.3
 
 # Ubuntu 18.04
 #sudo add-apt-repository ppa:wireguard/wireguard
@@ -78,7 +79,7 @@ add_line=${server_ip} + ":server"
 echo ${server_ip} > last_ip.txt
 
 # Get run scripts/master/wg0-server
-cd ~
+cd ${HOME}
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/add-client.sh
 chmod +x add-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-client.sh

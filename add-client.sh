@@ -74,7 +74,7 @@ sudo systemctl restart wg-quick@wg0.service
 	
 sudo wg set wg0 peer $(cat clients/$peer_name/$peer_name.pub) allowed-ips $ip/32
 echo "Adding peer to hosts file"
-echo $ip" "$peer_name | sudo tee -a /etc/hosts
+sudo echo $ip" "$peer_name | sudo tee -a /etc/hosts
 # Show new server config
 sudo wg show
 # Show QR code in bash

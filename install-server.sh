@@ -8,7 +8,7 @@
 
 # Default variables
 # Change these if you need to
-INSTALL_DIRECTORY=/etc/wireguard
+INSTALL_DIRECTORY=/$HOME/wireguard
 SERVER_PRIVATE_FILE=server_private_key
 SERVER_PUBLIC_FILE=server_public_key
 
@@ -94,7 +94,7 @@ sudo chmod +x remove-client.sh
 
 # Start up server
 sudo sysctl -p
-echo 1 > /proc/sys/net/ipv4/ip_forward
+sudo echo 1 > /proc/sys/net/ipv4/ip_forward
 
 sudo wg-quick up wg0
 

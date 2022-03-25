@@ -66,8 +66,8 @@ else
 fi
 
 # Get config
-sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-server.example.conf 
-sudo wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-client.example.conf
+wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-server.example.conf 
+wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/wg0-client.example.conf
 
 # Check if wg0.conf already exists
 if [ -f $INSTALL_DIRECTORY/wg0.conf ] && [ $OVERWRITE == 0 ] 

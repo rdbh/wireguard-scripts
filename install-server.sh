@@ -8,7 +8,7 @@
 
 # Default variables
 # Change these if you need to
-INSTALL_DIRECTORY=$HOME/wireguard
+INSTALL_DIRECTORY=$HOME/wg-install
 SERVER_PRIVATE_FILE=server_private_key
 SERVER_PUBLIC_FILE=server_public_key
 

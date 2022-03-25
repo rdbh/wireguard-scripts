@@ -7,6 +7,11 @@ FQDN=$(hostname -f)
 HOSTIP=$(ip -o route get to 1 | sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 peer_name=""
 
+if [[ "${UID}" -eq 0 ]]; then
+  printf "\nThis script should not be run as root\n"
+  exit 1
+fi
+
 if [ $# -eq 0 ]
 then
 	echo "You must pass a client name as an arg: add-client.sh <new-client>"
@@ -38,7 +43,7 @@ then
 	
 	# Create the client config
 	priv_key=$(cat clients/$peer_name/$peer_name.priv)
-    cat $HOME/wg-install/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
+    cat ${HOME}/wg-install/wg0-client.example.conf | sed -e 's/:CLIENT_IP:/'"$ip"'/' | sed -e 's|:CLIENT_KEY:|'"$priv_key"'|' | sed -e 's/:ALLOWED_IPS:/'"$ip3"'/' | sed -e 's|:SERVER_PUB_KEY:|'"$server_pub_key"'|' | sed -e 's|:SERVER_ADDRESS:|'"$HOSTIP"'|' > clients/$peer_name/wg0.conf
 	cp install-client.sh clients/$peer_name/install-client.sh
 	# Create QR Code for export
 	qrencode -o clients/$peer_name/$peer_name.png < clients/$peer_name/wg0.conf

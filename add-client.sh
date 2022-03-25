@@ -22,8 +22,8 @@ then
 	if [ -z "$3" ]
 	then
 		reldir=`dirname $0`
-		ip="10.100.200."$(expr $(cat /etc/wireguard/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
-		sudo echo $ip > /etc/wireguard/last-ip.txt
+		ip="10.100.200."$(expr $(cat $HOME/wg-install/last-ip.txt | tr "." " " | awk '{print $4}') + 1)
+		sudo echo $ip > $HOME/wireguard/last-ip.txt
 	else
 		ip=$3
 	fi
@@ -33,7 +33,7 @@ then
 	    echo "Server IP not found automatically. Update wg0.conf before sending to clients"
 		HOSTIP="<Insert IP HERE>"
 	fi
-	server_pub_key=$(cat /etc/wireguard/server_public_key)
+	server_pub_key=$(cat $HOME/wg-install/server_public_key)
 	ip3=`echo $ip | cut -d"." -f1-3`.0
 	
 	# Create the client config

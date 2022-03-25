@@ -1,7 +1,7 @@
 #!/bin/bash
 # Install wireguard on Ubuntu Server
 # (C) 2021 Richard Dawson 
-# v1.0.3
+# v1.0.4
 
 # Ubuntu 18.04
 #sudo add-apt-repository ppa:wireguard/wireguard
@@ -11,6 +11,11 @@
 INSTALL_DIRECTORY=/etc/wireguard
 SERVER_PRIVATE_FILE=server_private_key
 SERVER_PUBLIC_FILE=server_public_key
+
+if [[ "${UID}" -eq 0 ]]; then
+  printf "\nThis script should not be run as root\n"
+  exit 1
+fi
 
 # Set IP range if none specified (experimental)
 if [ $# -eq 0 ]
@@ -48,7 +53,7 @@ then
 	done
 else
 	echo "Creating $INSTALL_DIRECTORY"
-	mkdir -m 0700 $INSTALL_DIRECTORY
+	sudo mkdir -m 0755 $INSTALL_DIRECTORY
 fi
 
 cd $INSTALL_DIRECTORY
@@ -57,7 +62,7 @@ if [ -f $SERVER_PRIVATE_FILE ] && [ $OVERWRITE == 0 ]
 then
 	echo "$SERVER_PRIVATE_FILE exists, skipping."
 else
-	umask 077; wg genkey | tee $SERVER_PRIVATE_FILE | wg pubkey > $SERVER_PUBLIC_FILE
+	umask 022; wg genkey | tee $SERVER_PRIVATE_FILE | wg pubkey > $SERVER_PUBLIC_FILE
 fi
 
 # Get config
@@ -81,11 +86,11 @@ echo ${server_ip} > last_ip.txt
 # Get run scripts/master/wg0-server
 cd ${HOME}
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/add-client.sh
-chmod +x add-client.sh
+sudo chmod +x add-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/install-client.sh
-chmod +x install-client.sh
+sudo chmod +x install-client.sh
 wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-client.sh
-chmod +x remove-client.sh
+sudo chmod +x remove-client.sh
 
 # Start up server
 sudo sysctl -p
@@ -97,7 +102,7 @@ sudo wg-quick up wg0
 sudo ufw allow 51820/udp
 
 # Use this to forward traffic from the server
-sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+sudo sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
 sudo sysctl -p /etc/sysctl.conf
 #ufw route allow in on wg0 out on enp5s0
 

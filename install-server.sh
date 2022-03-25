@@ -93,6 +93,7 @@ wget https://raw.githubusercontent.com/rdbh/wireguard-scripts/master/remove-clie
 sudo chmod +x remove-client.sh
 
 # Start up server
+sudo cp $INSTALL_DIRECTORY/wg0.conf /etc/wireguard
 sudo su
 sudo sysctl -p
 sudo echo 1 > /proc/sys/net/ipv4/ip_forward

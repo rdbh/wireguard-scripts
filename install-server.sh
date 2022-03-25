@@ -53,7 +53,7 @@ then
 	done
 else
 	echo "Creating $INSTALL_DIRECTORY"
-	sudo mkdir -m 0755 $INSTALL_DIRECTORY
+	mkdir -m 0755 $INSTALL_DIRECTORY
 fi
 
 cd $INSTALL_DIRECTORY
@@ -110,3 +110,4 @@ sudo sysctl -p /etc/sysctl.conf
 
 # Set up wireguard to run on boot
 sudo systemctl enable wg-quick@wg0.service
+exit
